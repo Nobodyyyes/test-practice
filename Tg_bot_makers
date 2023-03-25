@@ -1,0 +1,56 @@
+import telebot
+from telebot import types
+import random
+
+neforID = "6002828233:AAFHwzUZa1v4_NZz9rijVVUxgb6Kx-Khan4"
+
+NeBot = telebot.TeleBot(neforID)
+
+Keyboard = types.ReplyKeyboardMarkup()
+button_one = types.KeyboardButton("Yes")
+button_two = types.KeyboardButton("No")
+
+Keyboard.add(button_one, button_two)
+
+@NeBot.message_handler(commands=["start", "eeye"])
+def start_message(message):
+  NeBot.send_sticker(
+    message.chat.id,
+    "CAACAgIAAxkBAAEITMtkHq2mzxVJtHems1iURe6UtQu69gACtx0AAs3DcUufHIdPsHPh6S8E")
+  msg = NeBot.send_message(message.chat.id,
+    f"oooooh my god, man! {message.chat.first_name}, you are so cute and niggers!",
+    reply_markup=Keyboard)
+  NeBot.register_next_step_handler(msg, check_answer)
+
+def check_answer(message):
+  if message.text == "Yes":
+    NeBot.send_message(message.chat.id, "Cool! Choose num 1 - 10, you have a 3 chance")
+    random_number = random.choice(range(1, 11))
+    game(message, 3, random_number)
+ 
+  else:
+    NeBot.send_message(message.chat.id, "Э, сен писдес турбайсынбы!")
+    NeBot.send_sticker(message.chat.id, "CAACAgIAAxkBAAEITbdkHrmQdD72Fq4C4U9dZKCTZhjfWAAChgQAAm7zUi5ck6BHrvBdVS8E")
+
+def game(message, attempts, random_numbers):
+  msg = NeBot.send_message(message.chat.id, "Choose a num")
+  NeBot.register_next_step_handler(msg, check_number, attempts -1, random_numbers)
+
+def check_number(message, attempts, random_number):
+  if message.text == str(random_number):
+    NeBot.send_message(message.chat.id, "You won!")
+    NeBot.send_sticker(message.chat.id, "CAACAgIAAxkBAAEITYJkHrkaUIauy2MpLO4ZSIVAVUVMPwAChxsAAjSeCUpsDYqhlLglGi8E")
+  elif attempts == 0: 
+     NeBot.send_message(message.chat.id, f"Э, все иди гуляй!{random_number}")
+     NeBot.send_sticker(message.chat.id, "CAACAgIAAxkBAAEITchkHrpivEvvjLo7EiPZ3bjk_eyn-gACuRQAAqVj2EsEHJJeMY9DkC8E")
+  else:
+    NeBot.send_message(message.chat.id, f"Try again, you alse have {attempts} chance")
+    game(message, attempts, random_number)
+    
+
+
+  
+  
+NeBot.polling()
+
+
